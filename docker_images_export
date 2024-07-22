@@ -1,0 +1,14 @@
+#!/bin/bash
+SD="./images_store2/"
+mkdir -p ${SD}
+for image_name in $(cat $1 | grep image | awk '{print $2 }')
+do
+  echo ${image_name}
+  new_file_name="$(echo ${image_name} |tr ':/' '-')"
+  echo ${new_file_name}
+  docker pull ${image_name}
+  docker save -o ${SD}${new_file_name}.tar ${image_name}
+  zip -9r  -s 500m ${SD}${new_file_name}.tar.zip ${SD}${new_file_name}.tar
+  rm ${SD}${new_file_name}.tar
+done
+
